@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Quiz Buzzer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0b0b1a;--surface:#141428;--card:#1e1e3a;--colA:#e74c3c;--colB:#2980b9;--colC:#f39c12;--colD:#27ae60;--green:#2ee89a;--red:#ff4757;--gold:#ffd700;--silver:#b0b0b0;--bronze:#cd7f32;--text:#fffffe;--dim:#7a7a9e;--accent:#a78bfa}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}input,textarea,select{font-family:inherit;outline:none}
+.screen{display:none;min-height:100vh;flex-direction:column}.screen.active{display:flex}
+.topbar{background:var(--surface);padding:.8rem 2rem;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid rgba(167,139,250,.2)}
+.topbar h1{font-size:1.4rem;color:var(--accent)}
+.hbtn{background:var(--card);color:var(--dim);padding:.45rem .9rem;border-radius:8px;font-size:.85rem;font-weight:600;margin-left:.4rem;transition:.2s}.hbtn:hover{color:#fff;background:var(--accent)}
+#host-setup{align-items:center;justify-content:center;padding:2rem;gap:1.5rem}
+#host-setup h1{font-size:3.2rem;color:var(--accent)}
+.sub{color:var(--dim);margin-bottom:.5rem}
+.scard{background:var(--surface);border-radius:16px;padding:1.5rem 2rem;width:100%;max-width:700px}
+.scard h3{color:var(--accent);margin-bottom:.8rem;font-size:1rem}
+.scard textarea{width:100%;background:var(--card);border:2px solid #2a2a4a;border-radius:10px;color:#fff;padding:1rem;font-size:.82rem;resize:vertical;min-height:160px;font-family:'Courier New',monospace}.scard textarea:focus{border-color:var(--accent)}
+.srow{display:flex;gap:.8rem;margin-top:.8rem;flex-wrap:wrap;align-items:center}
+.srow label{color:var(--dim);font-size:.9rem}
+.srow input[type=number]{background:var(--card);border:2px solid #2a2a4a;color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:1rem}
+.fbtn{background:var(--card);color:var(--accent);padding:.5rem 1rem;border-radius:8px;font-weight:600;font-size:.85rem;transition:.2s;position:relative;overflow:hidden}.fbtn:hover{background:var(--accent);color:#fff}
+.fbtn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.btn-go{font-size:1.3rem;font-weight:800;padding:.8rem 3rem;border-radius:14px;background:var(--accent);color:#fff;letter-spacing:1px;transition:.2s}.btn-go:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(167,139,250,.4)}
+.lobby-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem}
+.qr-wrap{background:#fff;padding:1.2rem;border-radius:16px}
+.qr-wrap img{display:block;border-radius:6px}
+.room-big{font-size:3.5rem;font-weight:900;letter-spacing:10px;color:var(--accent)}
+.room-link{color:var(--dim);font-size:.85rem;word-break:break-all;text-align:center;max-width:500px}
+.chips{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center}
+.chip{background:var(--card);padding:.6rem 1.2rem;border-radius:10px;font-weight:700;animation:pop .3s}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.gbody{flex:1;display:flex;flex-direction:column;padding:1.5rem 2rem;gap:1.2rem}
+.qbox{background:var(--surface);border-radius:16px;padding:2rem;text-align:center}
+.qnum{color:var(--accent);font-size:.9rem;font-weight:600;margin-bottom:.5rem}
+.qtxt{font-size:2.2rem;font-weight:700;line-height:1.3}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:900px;margin:0 auto;width:100%}
+.ocard{border-radius:14px;padding:1.2rem 1.5rem;font-size:1.4rem;font-weight:700;display:flex;align-items:center;gap:1rem;transition:.3s;color:#fff;border:3px solid transparent}
+.ocard .ol{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.3rem;background:rgba(0,0,0,.25);flex-shrink:0}
+.oc-a{background:var(--colA)}.oc-b{background:var(--colB)}.oc-c{background:var(--colC)}.oc-d{background:var(--colD)}
+.ocard.o-correct{border-color:#fff;box-shadow:0 0 30px rgba(46,232,154,.5);animation:glow 1s infinite alternate}
+.ocard.o-wrong{opacity:.3}
+@keyframes glow{from{box-shadow:0 0 20px rgba(46,232,154,.3)}to{box-shadow:0 0 40px rgba(46,232,154,.7)}}
+.bstrip{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;min-height:50px;align-items:center}
+.bchip{padding:.5rem 1rem;border-radius:10px;font-weight:700;animation:pop .3s;display:flex;align-items:center;gap:.4rem}
+.bchip.b1{box-shadow:0 0 15px rgba(255,215,0,.4);border:2px solid var(--gold);font-size:1.2rem}
+.bwait{color:var(--dim);font-size:1.1rem;animation:bl 1.5s infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
+.tbar{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;padding:.8rem;background:rgba(0,0,0,.3);border-radius:10px}
+.tbi{background:var(--card);padding:.4rem .8rem;border-radius:8px;text-align:center;min-width:90px;transition:.4s;border:2px solid transparent}
+.tbi .tn{font-size:.75rem;color:var(--dim);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100px}
+.tbi .ts{font-size:1.6rem;font-weight:900}
+.tbi.at{border-color:var(--accent);box-shadow:0 0 12px rgba(167,139,250,.4)}
+.tbi.fg{background:#12322a;border-color:var(--green)}.tbi.fr{background:#321218;border-color:var(--red)}
+.gst{text-align:center;padding:.6rem;font-size:1rem;color:var(--dim);min-height:40px}
+.gst .kh{background:var(--card);padding:.15rem .5rem;border-radius:5px;font-size:.8rem;color:var(--accent)}
+.pscreen{align-items:center;justify-content:center;padding:1.5rem;gap:1rem;text-align:center}
+#player-join{background:linear-gradient(180deg,var(--surface),var(--bg))}
+#player-join h2{font-size:1.8rem;color:var(--accent)}
+#player-join input{background:var(--card);border:2px solid #444;color:#fff;padding:.9rem;border-radius:12px;font-size:1.2rem;width:100%;max-width:280px;text-align:center}
+#player-join input:focus{border-color:var(--accent)}
+.cpick{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin:.5rem 0}
+.cpick button{width:34px;height:34px;border-radius:50%;border:3px solid transparent;transition:.2s}.cpick button.sel{border-color:#fff;transform:scale(1.15)}
+.loader{width:40px;height:40px;border:3px solid var(--card);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.buzzbtn{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff8a8a,#e74c3c,#a01010);color:#fff;font-size:2.2rem;font-weight:900;letter-spacing:4px;box-shadow:0 10px 0 #6b0a0a,0 14px 40px rgba(200,0,0,.3);transition:.1s;user-select:none;text-transform:uppercase}
+.buzzbtn:active:not(.off){transform:translateY(8px);box-shadow:0 2px 0 #6b0a0a}
+.buzzbtn.off{background:radial-gradient(circle at 35% 35%,#555,#333,#222);box-shadow:0 10px 0 #111;pointer-events:none;color:#666}
+.abcd{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;width:100%;max-width:340px}
+.abcdbtn{border-radius:16px;padding:2rem;font-size:2.5rem;font-weight:900;color:#fff;transition:.15s;border:4px solid transparent;user-select:none}
+.abcdbtn:active:not(.lk){transform:scale(.93)}
+.abcdbtn.lk{pointer-events:none;opacity:.5}.abcdbtn.my{border-color:#fff;opacity:1;transform:scale(1.05)}
+.ab-a{background:var(--colA)}.ab-b{background:var(--colB)}.ab-c{background:var(--colC)}.ab-d{background:var(--colD)}
+#player-result .ri{font-size:5rem}
+#player-result .rt{font-size:1.6rem;font-weight:800}
+#host-scores{align-items:center;justify-content:center;padding:2rem;gap:1.2rem}
+#host-scores h1{font-size:2.5rem;color:var(--gold)}
+.flist{width:100%;max-width:550px}
+.frow{display:flex;align-items:center;gap:1rem;padding:.8rem 1.2rem;margin-bottom:.4rem;border-radius:12px;background:var(--surface);animation:pop .4s}
+.frow .fr{font-size:1.8rem;font-weight:900;width:45px;text-align:center}
+.frow .fr.g1{color:var(--gold)}.frow .fr.g2{color:var(--silver)}.frow .fr.g3{color:var(--bronze)}
+.frow .fn{flex:1;font-size:1.1rem;font-weight:600}.frow .fs{font-size:1.8rem;font-weight:900}
+/* Status indicator */
+.conn-status{font-size:.8rem;padding:.3rem .8rem;border-radius:6px;display:inline-block}
+.conn-ok{background:#12322a;color:var(--green)}
+.conn-wait{background:#2a2a00;color:#f39c12}
+.conn-err{background:#321218;color:var(--red)}
+/* Debug log */
+.debug-log{position:fixed;bottom:0;left:0;right:0;max-height:120px;overflow-y:auto;background:rgba(0,0,0,.9);color:#0f0;font-family:monospace;font-size:.7rem;padding:.5rem;z-index:999;display:none}
+.debug-log.visible{display:block}
+@media(max-width:700px){.qtxt{font-size:1.4rem}.opts{grid-template-columns:1fr}.ocard{font-size:1.1rem;padding:.8rem 1rem}}
+</style>
+</head>
+<body>
+<div class="screen active" id="host-setup">
+  <h1>🎯 Quiz Buzzer</h1>
+  <p class="sub">Carica le domande e crea la stanza</p>
+  <div class="scard"><h3>📋 Domande (JSON)</h3>
+    <textarea id="qInput" placeholder='[{"q":"Domanda?","options":["A","B","C","D"],"correct":0}]'></textarea>
+    <div class="srow">
+      <button class="fbtn">📁 Carica JSON<input type="file" accept=".json" onchange="loadFile(event)"></button>
+      <button class="fbtn" onclick="loadSample()">💡 Esempio</button>
+    </div>
+  </div>
+  <div class="scard"><h3>⚙️ Impostazioni</h3>
+    <div class="srow"><label>Punti:</label><input type="number" id="cfgPts" value="1" min="1" max="10" style="width:60px"><label>Secondi:</label><input type="number" id="cfgTime" value="15" min="5" max="60" style="width:60px"></div>
+  </div>
+  <button class="btn-go" onclick="startHost()">🚀 Crea Stanza</button>
+  <p style="color:var(--dim);font-size:.8rem;margin-top:.3rem">Premi D per mostrare/nascondere il debug log</p>
+</div>
+
+<div class="screen" id="host-lobby">
+  <div class="topbar"><h1>🎯 Quiz Buzzer</h1><div><span id="lCnt" style="color:var(--dim);margin-right:.5rem">0 squadre</span><span class="conn-status conn-wait" id="hostStatus">Connessione...</span><button class="hbtn" id="bStart" disabled onclick="startQuiz()">▶ Inizia</button></div></div>
+  <div class="lobby-body">
+    <div class="qr-wrap" id="qrBox"></div>
+    <div class="room-big" id="rDisp"></div>
+    <div class="room-link" id="rLink"></div>
+    <p style="color:var(--dim)">Scansiona il QR o vai all'indirizzo</p>
+    <div class="chips" id="lChips"></div>
+  </div>
+</div>
+
+<div class="screen" id="host-game">
+  <div class="topbar"><h1>🎯 Quiz Buzzer</h1><div><span id="qCtr" style="color:var(--dim);margin-right:.5rem"></span><button class="hbtn" onclick="showScores()">🏆</button><button class="hbtn" onclick="nextQ()">⏭</button></div></div>
+  <div class="gbody">
+    <div class="qbox"><div class="qnum" id="hQn"></div><div class="qtxt" id="hQt"></div></div>
+    <div class="opts" id="hO"></div>
+    <div class="bstrip" id="hB"><span class="bwait">⏳</span></div>
+    <div class="tbar" id="hT"></div>
+    <div class="gst" id="hS"><span class="kh">Spazio</span> buzzer · <span class="kh">N</span> prossima · <span class="kh">C</span> classifica</div>
+  </div>
+</div>
+
+<div class="screen" id="host-scores">
+  <h1>🏆 Classifica</h1>
+  <div class="flist" id="fL"></div>
+  <button class="btn-go" style="margin-top:1rem" onclick="show('host-game')">← Torna</button>
+</div>
+
+<div class="screen pscreen" id="player-join">
+  <h2>🎯 Quiz Buzzer</h2>
+  <p style="color:var(--dim)">Nome della squadra</p>
+  <input id="pN" placeholder="Nome squadra" maxlength="20" autocomplete="off">
+  <div class="cpick" id="cP"></div>
+  <button class="btn-go" onclick="joinGame()">Entra!</button>
+  <p id="pE" style="color:var(--red);font-size:.85rem;min-height:1.2rem"></p>
+</div>
+
+<div class="screen pscreen" id="player-wait">
+  <div style="font-size:1.3rem;font-weight:700" id="pwN"></div>
+  <span class="conn-status conn-wait" id="playerStatus">Connessione...</span>
+  <div class="loader"></div>
+  <div style="color:var(--dim)" id="pwMsg">Connessione al server...</div>
+</div>
+
+<div class="screen pscreen" id="player-buzz">
+  <p style="color:var(--dim)">Guarda il proiettore!</p>
+  <button class="buzzbtn" id="bB" onclick="doBuzz()">BUZZ!</button>
+  <p style="color:var(--dim);font-size:.85rem" id="bI"></p>
+</div>
+
+<div class="screen pscreen" id="player-answer">
+  <p style="color:var(--dim);margin-bottom:.3rem">Scegli la risposta!</p>
+  <div id="pTm" style="font-size:2rem;font-weight:900;color:var(--accent)"></div>
+  <div class="abcd" id="pAB"></div>
+</div>
+
+<div class="screen pscreen" id="player-result">
+  <div class="ri" id="rI"></div>
+  <div class="rt" id="rT"></div>
+  <p style="color:var(--dim)" id="rD"></p>
+</div>
+
+<div class="debug-log" id="dbg"></div>
+
+<script>
+const L=['A','B','C','D'],AC=['ab-a','ab-b','ab-c','ab-d'],TC=['#e74c3c','#2980b9','#f39c12','#27ae60','#8e44ad','#e67e22','#1abc9c','#d35400','#3498db','#c0392b'];
+let MODE,peer,questions=[],teams={},buzz=[],curQ=-1,phase='idle',cfgP=1,cfgT=15,roomId='',aTO,myN='',myC='#e74c3c',hC=null,pTI;
+
+// Debug logger
+function log(msg){
+  console.log('[QB]',msg);
+  const d=document.getElementById('dbg');
+  const t=new Date().toLocaleTimeString();
+  d.innerHTML+=`<div>${t} ${msg}</div>`;
+  d.scrollTop=d.scrollHeight;
+}
+
+const P=new URLSearchParams(location.search);
+if(P.has('join')){MODE='player';roomId=P.get('join');show('player-join');initCP();log('Player mode, room='+roomId)}
+else{MODE='host';show('host-setup');log('Host mode')}
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function beep(f,d){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=f;g.gain.value=.15;o.start();o.stop(a.currentTime+d)}catch(e){}}
+function bc(d){for(let t in teams)try{teams[t].conn.send(d)}catch(e){log('Send error to '+t+': '+e)}}
+
+// PeerJS config with explicit server
+const PEER_CFG = {
+  debug: 2,
+  config: {
+    iceServers: [
+      {urls:'stun:stun.l.google.com:19302'},
+      {urls:'stun:stun1.l.google.com:19302'},
+      {urls:'stun:stun2.l.google.com:19302'},
+      {urls:'stun:stun.services.mozilla.com'}
+    ]
+  }
+};
+
+// ============ HOST ============
+function loadFile(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>document.getElementById('qInput').value=r.result;r.readAsText(f)}
+
+const DOMANDE_FILOSOFIA=[{"q":"\"Ensino as pessoas a falar bem e a persuadir — não me interessa se o que dizem é verdadeiro ou falso.\"","options":["Sofistas","Sócrates","Platão","Aristóteles"],"correct":0},{"q":"\"As leis e a moral não são naturais: são acordos entre os homens e podem ser mudados a qualquer momento.\"","options":["Platão","Sofistas","Aristóteles","Sócrates"],"correct":1},{"q":"\"Cada pessoa percebe a realidade à sua maneira. Não há uma única verdade válida para todos.\"","options":["Sócrates","Aristóteles","Platão","Sofistas"],"correct":3},{"q":"\"O que importa é vencer o debate, não descobrir a verdade.\"","options":["Sofistas","Platão","Sócrates","Aristóteles"],"correct":0},{"q":"\"Sei que nada sei — mas isso já é mais do que quem pensa que sabe tudo.\"","options":["Platão","Aristóteles","Sócrates","Sofistas"],"correct":2},{"q":"\"Se soubesses realmente o que é o Bem, nunca escolherias o mal. O vício é apenas ignorância.\"","options":["Aristóteles","Sócrates","Sofistas","Platão"],"correct":1},{"q":"\"Prefiro ser refutado a enganar os outros — a verdade importa mais do que a vitória.\"","options":["Sofistas","Platão","Aristóteles","Sócrates"],"correct":3},{"q":"\"Sem definir com rigor o que é a Justiça, como podemos construir uma cidade justa?\"","options":["Platão","Sócrates","Aristóteles","Sofistas"],"correct":1},{"q":"\"O meu método é como a arte da minha mãe: ajudo o interlocutor a descobrir a verdade por si mesmo.\"","options":["Sócrates","Platão","Sofistas","Aristóteles"],"correct":0},{"q":"\"O que os teus olhos veem são apenas sombras. A verdadeira realidade é invisível e só a razão pode alcançá-la.\"","options":["Aristóteles","Sofistas","Sócrates","Platão"],"correct":3},{"q":"\"A alma já contemplou as verdades eternas antes de nascer. Aprender é, no fundo, recordar.\"","options":["Sofistas","Aristóteles","Platão","Sócrates"],"correct":2},{"q":"\"O corpo é um obstáculo para o conhecimento: prende a alma ao mundo das aparências.\"","options":["Platão","Sócrates","Aristóteles","Sofistas"],"correct":0},{"q":"\"Existe uma Ideia perfeita de Beleza, de Justiça, de Bem — tudo o que vemos é apenas uma cópia imperfeita.\"","options":["Sócrates","Sofistas","Aristóteles","Platão"],"correct":3},{"q":"\"Não procures a essência das coisas num mundo à parte: ela está aqui, dentro da própria coisa.\"","options":["Platão","Sofistas","Aristóteles","Sócrates"],"correct":2},{"q":"\"Para conhecer verdadeiramente uma estátua, deves responder: de quê é feita, como é, por quem, e para quê.\"","options":["Sofistas","Platão","Sócrates","Aristóteles"],"correct":3},{"q":"\"Tudo o que existe está em movimento — em passagem contínua do que pode ser para o que é.\"","options":["Aristóteles","Sócrates","Platão","Sofistas"],"correct":0},{"q":"\"Existe um Primeiro Motor que move tudo sem ser movido por nada. Não age — atrai, como o bem atrai quem o deseja.\"","options":["Platão","Aristóteles","Sofistas","Sócrates"],"correct":1},{"q":"\"A felicidade não é um sentimento passageiro: é a vida inteira vivida de acordo com a razão.\"","options":["Sofistas","Sócrates","Platão","Aristóteles"],"correct":3},{"q":"\"A natureza não é um obstáculo ao conhecimento — é o seu ponto de partida.\"","options":["Platão","Sofistas","Sócrates","Aristóteles"],"correct":3},{"q":"\"Todas as coisas têm um fim para o qual tendem — o universo é orientado por uma finalidade.\"","options":["Aristóteles","Platão","Sócrates","Sofistas"],"correct":0},{"q":"CORINGA — \"A razão é o único caminho para o conhecimento verdadeiro — os sentidos enganam.\" (quem vai mais longe nesta ideia?)","options":["Sofistas","Sócrates","Platão","Aristóteles"],"correct":2},{"q":"CORINGA — \"O homem deve viver virtuosamente — só assim alcança a verdadeira felicidade.\" (quem associa felicidade à vida toda segundo a razão?)","options":["Sofistas","Platão","Aristóteles","Sócrates"],"correct":2},{"q":"CORINGA — \"A linguagem precisa de rigor — senão a comunicação e a vida em comum tornam-se impossíveis.\" (quem quer rigor para encontrar a verdade, não para persuadir?)","options":["Sócrates","Sofistas","Platão","Aristóteles"],"correct":0},{"q":"CORINGA — \"O mundo sensível é imperfeito e mutável — é preciso ir além dele.\" (quem abandona o sensível em favor das Ideias transcendentes?)","options":["Aristóteles","Sócrates","Sofistas","Platão"],"correct":3}];
+
+function loadSample(){document.getElementById('qInput').value=JSON.stringify(DOMANDE_FILOSOFIA,null,2)}
+document.getElementById('qInput').value=JSON.stringify(DOMANDE_FILOSOFIA,null,2);
+
+function startHost(){
+  try{
+    questions=JSON.parse(document.getElementById('qInput').value);
+    if(!Array.isArray(questions)||!questions.length)throw'vuoto';
+    questions.forEach((q,i)=>{if(!q.q||!q.options||q.correct===undefined)throw`Domanda ${i+1} incompleta`});
+  }catch(e){alert('Errore JSON: '+e);return}
+  cfgP=+document.getElementById('cfgPts').value||1;
+  cfgT=+document.getElementById('cfgTime').value||15;
+  roomId=String(Math.floor(1000+Math.random()*9000));
+  log('Creating room: '+roomId);
+
+  const st=document.getElementById('hostStatus');
+  st.textContent='Connessione al server...';st.className='conn-status conn-wait';
+
+  peer=new Peer('qb-'+roomId, PEER_CFG);
+
+  peer.on('open',(id)=>{
+    log('Host peer open: '+id);
+    st.textContent='🟢 Online';st.className='conn-status conn-ok';
+    show('host-lobby');
+    document.getElementById('rDisp').textContent=roomId;
+    const url=location.href.split('?')[0]+'?join='+roomId;
+    document.getElementById('rLink').textContent=url;
+    log('Join URL: '+url);
+    const img=document.createElement('img');
+    img.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data='+encodeURIComponent(url);
+    img.width=220;img.height=220;img.style.borderRadius='8px';
+    img.onerror=()=>{document.getElementById('qrBox').innerHTML='<p style="color:#333;padding:1rem">QR non disponibile</p>'};
+    document.getElementById('qrBox').innerHTML='';document.getElementById('qrBox').appendChild(img);
+  });
+
+  peer.on('connection',cn=>{
+    log('Incoming connection from: '+cn.peer);
+    cn.on('open',()=>{log('Connection open: '+cn.peer)});
+    cn.on('data',d=>{log('Data from '+cn.peer+': '+JSON.stringify(d));hMsg(cn,d)});
+    cn.on('close',()=>{log('Connection closed: '+cn.peer);for(let t in teams)if(teams[t].conn===cn){delete teams[t];uLob();uTb();break}});
+    cn.on('error',err=>{log('Connection error: '+err)});
+  });
+
+  peer.on('error',err=>{
+    log('Peer error: '+err.type+' '+err.message);
+    st.textContent='❌ Errore: '+err.type;st.className='conn-status conn-err';
+    if(err.type==='unavailable-id'){
+      roomId=String(Math.floor(1000+Math.random()*9000));
+      log('Retrying with new room: '+roomId);
+      setTimeout(startHost,1000);
+    }
+  });
+
+  peer.on('disconnected',()=>{
+    log('Peer disconnected, reconnecting...');
+    st.textContent='🟡 Riconnessione...';st.className='conn-status conn-wait';
+    peer.reconnect();
+  });
+}
+
+function hMsg(cn,d){
+  if(d.type==='join'){
+    const tid='t'+Date.now()+Math.random().toString(36).substr(2,3);
+    teams[tid]={name:d.name,color:d.color,score:0,conn:cn};cn.tid=tid;
+    log('Team joined: '+d.name+' ('+tid+')');
+    cn.send({type:'joined',tid});
+    uLob();
+    if(curQ>=0&&phase==='buzzing')cn.send({type:'buzz_open'});
+  }else if(d.type==='buzz'){
+    if(phase!=='buzzing')return;const tid=cn.tid;if(!tid||!teams[tid]||buzz.includes(tid))return;
+    buzz.push(tid);rBz();log('Buzz from '+teams[tid].name);
+    if(buzz.length===1){phase='answering';cn.send({type:'pick',n:questions[curQ].options.length,t:cfgT});
+    setSt(`<b style="color:${teams[tid].color}">${esc(teams[tid].name)}</b> si è prenotato!`);hlT(tid);sTmr();beep(660,.12)}
+  }else if(d.type==='answer'){
+    if(phase!=='answering')return;clearTimeout(aTO);const tid=cn.tid;if(!tid)return;
+    log('Answer from '+teams[tid]?.name+': '+d.c);
+    const q=questions[curQ],ok=d.c===q.correct;doReveal(tid,d.c,ok);
+  }
+}
+
+function uLob(){const n=Object.keys(teams).length;document.getElementById('lCnt').textContent=n+' squadr'+(n===1?'a':'e');document.getElementById('bStart').disabled=n===0;document.getElementById('lChips').innerHTML=Object.values(teams).map(t=>`<div class="chip" style="color:${t.color}">${esc(t.name)}</div>`).join('')}
+function startQuiz(){show('host-game');curQ=-1;nextQ()}
+
+function nextQ(){
+  curQ++;clearTimeout(aTO);if(curQ>=questions.length){showScores();return}
+  buzz=[];phase='idle';const q=questions[curQ];
+  document.getElementById('hQn').textContent=`Domanda ${curQ+1} di ${questions.length}`;
+  document.getElementById('hQt').textContent=q.q;document.getElementById('qCtr').textContent=`${curQ+1}/${questions.length}`;
+  const og=document.getElementById('hO');og.innerHTML='';
+  q.options.forEach((o,i)=>{og.innerHTML+=`<div class="ocard oc-${L[i].toLowerCase()}" id="ho${i}"><span class="ol">${L[i]}</span><span>${esc(o)}</span></div>`});
+  document.getElementById('hB').innerHTML='';uTb();
+  setSt('<span class="kh">Spazio</span> per aprire i buzzer');bc({type:'wait'});
+}
+
+function openBz(){if(phase!=='idle')return;phase='buzzing';buzz=[];document.getElementById('hB').innerHTML='<span class="bwait">⏳ Chi si prenota?</span>';setSt('Buzzer aperti!');beep(440,.12);bc({type:'buzz_open'});log('Buzzers opened')}
+
+function doReveal(tid,ch,ok){
+  phase='revealed';const q=questions[curQ];
+  q.options.forEach((_,i)=>{const e=document.getElementById('ho'+i);if(i===q.correct)e.classList.add('o-correct');else e.classList.add('o-wrong')});
+  if(ok){teams[tid].score+=cfgP;beep(880,.1);setTimeout(()=>beep(1100,.12),120);flT(tid,'fg');setSt(`✅ <b style="color:${teams[tid].color}">${esc(teams[tid].name)}</b> +${cfgP}!`)}
+  else{beep(220,.25);flT(tid,'fr');setSt(`❌ <b style="color:${teams[tid].color}">${esc(teams[tid].name)}</b> sbagliato · Risposta: <b>${L[q.correct]}</b>`)}
+  uTb();bc({type:'result',ok,ci:q.correct,who:teams[tid]?.name,ch});
+}
+
+function sTmr(){let r=cfgT;const tk=()=>{if(phase!=='answering')return;r--;if(r<=0){const tid=buzz[0];if(tid){doReveal(tid,-1,false);teams[tid].conn?.send({type:'timeout'})}return}aTO=setTimeout(tk,1000)};aTO=setTimeout(tk,1000)}
+function rBz(){document.getElementById('hB').innerHTML=buzz.map((tid,i)=>{const t=teams[tid];return t?`<div class="bchip ${i===0?'b1':''}" style="background:${t.color}">#${i+1} ${esc(t.name)}</div>`:''}).join('')}
+function uTb(){document.getElementById('hT').innerHTML=Object.entries(teams).map(([tid,t])=>`<div class="tbi" id="tb-${tid}" style="border-left:4px solid ${t.color}"><div class="tn">${esc(t.name)}</div><div class="ts">${t.score}</div></div>`).join('')}
+function hlT(tid){document.querySelectorAll('.tbi').forEach(e=>e.classList.remove('at'));const e=document.getElementById('tb-'+tid);if(e)e.classList.add('at')}
+function flT(tid,c){const e=document.getElementById('tb-'+tid);if(!e)return;e.classList.add(c);setTimeout(()=>e.classList.remove(c),3000)}
+function setSt(h){document.getElementById('hS').innerHTML=h}
+
+function showScores(){
+  show('host-scores');const s=Object.values(teams).sort((a,b)=>b.score-a.score);
+  document.getElementById('fL').innerHTML=s.map((t,i)=>{const m=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'°';const c=i<3?'g'+(i+1):'';return`<div class="frow" style="animation-delay:${i*.08}s"><span class="fr ${c}">${m}</span><span class="fn" style="color:${t.color}">${esc(t.name)}</span><span class="fs">${t.score}</span></div>`}).join('');
+  bc({type:'scores',l:s.map(t=>({n:t.name,s:t.score}))});
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.code==='KeyD'){document.getElementById('dbg').classList.toggle('visible');return}
+  if(MODE!=='host')return;
+  if(e.code==='Space'&&phase==='idle'){e.preventDefault();openBz()}
+  if(e.code==='KeyN'||e.code==='ArrowRight')nextQ();
+  if(e.code==='KeyC')showScores();
+});
+
+// ============ PLAYER ============
+function initCP(){const c=document.getElementById('cP');TC.forEach((col,i)=>{const b=document.createElement('button');b.style.background=col;b.onclick=()=>{myC=col;c.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};if(i===0){myC=col;b.classList.add('sel')}c.appendChild(b)})}
+
+function joinGame(){
+  const n=document.getElementById('pN').value.trim();
+  if(!n){document.getElementById('pE').textContent='Inserisci un nome!';return}
+  myN=n;
+  const st=document.getElementById('playerStatus');
+  const msg=document.getElementById('pwMsg');
+  show('player-wait');
+  document.getElementById('pwN').textContent='🏷 '+myN;
+  st.textContent='Connessione...';st.className='conn-status conn-wait';
+  msg.textContent='Connessione al server PeerJS...';
+
+  log('Joining room: qb-'+roomId);
+
+  peer=new Peer(undefined, PEER_CFG);
+
+  peer.on('open',(myId)=>{
+    log('Player peer open: '+myId);
+    msg.textContent='Connessione alla stanza '+roomId+'...';
+
+    hC=peer.connect('qb-'+roomId,{reliable:true, serialization:'json'});
+
+    hC.on('open',()=>{
+      log('Connected to host!');
+      st.textContent='🟢 Connesso';st.className='conn-status conn-ok';
+      msg.textContent='In attesa della domanda...';
+      hC.send({type:'join',name:myN,color:myC});
+      log('Sent join message');
+    });
+
+    hC.on('data',(d)=>{
+      log('From host: '+JSON.stringify(d));
+      pMsg(d);
+    });
+
+    hC.on('close',()=>{
+      log('Connection to host closed');
+      st.textContent='❌ Disconnesso';st.className='conn-status conn-err';
+      msg.textContent='Connessione persa. Riprova.';
+      show('player-join');
+      document.getElementById('pE').textContent='Connessione persa. Riprova.';
+    });
+
+    hC.on('error',(err)=>{
+      log('Connection error: '+err);
+      st.textContent='❌ Errore';st.className='conn-status conn-err';
+      msg.textContent='Errore: '+err;
+    });
+
+    // Timeout if connection doesn't open in 10 seconds
+    setTimeout(()=>{
+      if(!hC || !hC.open){
+        log('Connection timeout');
+        msg.textContent='Timeout — la stanza potrebbe non esistere. Verifica il codice.';
+        st.textContent='❌ Timeout';st.className='conn-status conn-err';
+      }
+    },10000);
+  });
+
+  peer.on('error',(err)=>{
+    log('Player peer error: '+err.type+' '+err.message);
+    document.getElementById('pE').textContent='Errore: '+err.type+'. Riprova.';
+    st.textContent='❌ '+err.type;st.className='conn-status conn-err';
+    msg.textContent='Errore di connessione: '+err.type;
+    if(err.type==='peer-unavailable'){
+      msg.textContent='Stanza non trovata! Il docente ha creato la stanza?';
+    }
+  });
+
+  peer.on('disconnected',()=>{
+    log('Player disconnected, reconnecting...');
+    peer.reconnect();
+  });
+}
+
+function pMsg(d){
+  if(d.type==='joined'||d.type==='wait'){show('player-wait');document.getElementById('pwMsg').textContent='In attesa della domanda...'}
+  else if(d.type==='buzz_open'){show('player-buzz');document.getElementById('bB').classList.remove('off');document.getElementById('bI').textContent='Premi per prenotarti!'}
+  else if(d.type==='pick'){show('player-answer');mkABCD(d.n,d.t)}
+  else if(d.type==='result'){
+    show('player-result');clearInterval(pTI);
+    if(d.ok){document.getElementById('rI').textContent='🎉';document.getElementById('rT').textContent=d.who===myN?'Corretto!':d.who+' ha indovinato!';document.getElementById('rT').style.color='var(--green)';if(d.who===myN&&navigator.vibrate)navigator.vibrate([80,40,80])}
+    else{document.getElementById('rI').textContent='❌';document.getElementById('rT').textContent=d.who===myN?'Sbagliato!':d.who+' ha sbagliato';document.getElementById('rT').style.color='var(--red)'}
+    document.getElementById('rD').textContent='Risposta: '+L[d.ci];
+  }
+  else if(d.type==='timeout'){show('player-result');clearInterval(pTI);document.getElementById('rI').textContent='⏰';document.getElementById('rT').textContent='Tempo scaduto!';document.getElementById('rT').style.color='var(--red)';document.getElementById('rD').textContent=''}
+  else if(d.type==='scores'){show('player-result');document.getElementById('rI').textContent='🏆';const me=d.l.findIndex(t=>t.n===myN);document.getElementById('rT').textContent=me===0?'Avete vinto!':`${me+1}°`;document.getElementById('rT').style.color=me===0?'var(--gold)':'var(--text)';document.getElementById('rD').textContent=d.l.map((t,i)=>(i+1)+'. '+t.n+': '+t.s).join(' · ')}
+}
+
+function doBuzz(){const b=document.getElementById('bB');if(b.classList.contains('off'))return;b.classList.add('off');document.getElementById('bI').textContent='⏳ Inviato!';hC.send({type:'buzz'});if(navigator.vibrate)navigator.vibrate(80);log('Buzz sent')}
+
+function mkABCD(n,time){
+  const c=document.getElementById('pAB');c.innerHTML='';
+  for(let i=0;i<Math.min(n,4);i++){const b=document.createElement('button');b.className='abcdbtn '+AC[i];b.textContent=L[i];
+    b.onclick=()=>{c.querySelectorAll('.abcdbtn').forEach(x=>{x.classList.add('lk');x.classList.remove('my')});b.classList.add('my');clearInterval(pTI);document.getElementById('pTm').textContent='✓';hC.send({type:'answer',c:i});log('Answer sent: '+L[i])};c.appendChild(b)}
+  let r=time;document.getElementById('pTm').textContent=r+'s';pTI=setInterval(()=>{r--;document.getElementById('pTm').textContent=r+'s';if(r<=0)clearInterval(pTI)},1000);
+}
+</script>
+</body>
+</html>
