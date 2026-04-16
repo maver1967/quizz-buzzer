@@ -1,0 +1,167 @@
+{
+  "title": "Quiz: A Pessoa como Sujeito Moral",
+  "subject": "Introdução à Filosofia — 11.º Ano",
+  "total_questions": 16,
+  "questions": [
+    {
+      "id": 1,
+      "question": "Uma pessoa que age moralmente é diferente de um autómato porque:",
+      "answers": [
+        { "text": "É mais inteligente", "correct": false },
+        { "text": "Obedece às leis", "correct": false },
+        { "text": "É capaz de distinguir o bem do mal", "correct": true },
+        { "text": "Nunca erra", "correct": false }
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Na Roma antiga, o que indicava originalmente a palavra 'persona'?",
+      "answers": [
+        { "text": "O nome do cidadão", "correct": false },
+        { "text": "O papel militar", "correct": false },
+        { "text": "A máscara dos actores no teatro", "correct": true },
+        { "text": "O documento jurídico", "correct": false }
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Com que corrente se passa do conceito de pessoa civil para pessoa como sujeito moral?",
+      "answers": [
+        { "text": "Estoicismo", "correct": false },
+        { "text": "Platonismo", "correct": false },
+        { "text": "Cristianismo", "correct": true },
+        { "text": "Aristotelismo", "correct": false }
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Qual é o sentido ético do conceito de pessoa?",
+      "answers": [
+        { "text": "Sujeito de direitos legais", "correct": false },
+        { "text": "Individualidade com personalidade", "correct": false },
+        { "text": "Sujeito moral dotado de valor e dignidade", "correct": true },
+        { "text": "Entidade biológica racional", "correct": false }
+      ]
+    },
+    {
+      "id": 5,
+      "question": "De que palavra grega deriva o termo 'ética'?",
+      "answers": [
+        { "text": "Logos", "correct": false },
+        { "text": "Ethos", "correct": true },
+        { "text": "Polis", "correct": false },
+        { "text": "Nomos", "correct": false }
+      ]
+    },
+    {
+      "id": 6,
+      "question": "De que palavra latina deriva o termo 'moral'?",
+      "answers": [
+        { "text": "Mortuus", "correct": false },
+        { "text": "Motus", "correct": false },
+        { "text": "Mores", "correct": true },
+        { "text": "Mandatum", "correct": false }
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Qual é a pergunta fundamental à qual a moral procura responder?",
+      "answers": [
+        { "text": "O que é o bem?", "correct": false },
+        { "text": "Como fundamentar os princípios éticos?", "correct": false },
+        { "text": "O que devo fazer?", "correct": true },
+        { "text": "Qual é a origem da consciência?", "correct": false }
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Qual é a pergunta fundamental da metaética?",
+      "answers": [
+        { "text": "O que devo fazer?", "correct": false },
+        { "text": "Como regular as acções concretas?", "correct": false },
+        { "text": "O que é o bem? O que é a justiça?", "correct": true },
+        { "text": "Como analisar os casos de aborto?", "correct": false }
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Qual é a principal diferença entre 'indivíduo' e 'pessoa'?",
+      "answers": [
+        { "text": "O indivíduo tem sentimentos, a pessoa não", "correct": false },
+        { "text": "O indivíduo é determinado, a pessoa é livre", "correct": true },
+        { "text": "A pessoa é biológica, o indivíduo não", "correct": false },
+        { "text": "Não há nenhuma diferença", "correct": false }
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Um médico que decide não mentir ao doente, mesmo quando é difícil, está a agir como:",
+      "answers": [
+        { "text": "Um autómato", "correct": false },
+        { "text": "Um indivíduo determinado", "correct": false },
+        { "text": "Um ser amoral", "correct": false },
+        { "text": "Um agente moral consciente", "correct": true }
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Um aluno que escolhe copiar num exame é moralmente responsável porque:",
+      "answers": [
+        { "text": "Não sabia que era errado", "correct": false },
+        { "text": "Era obrigado pelas circunstâncias", "correct": false },
+        { "text": "Era livre de escolher de outra forma", "correct": true },
+        { "text": "Não tinha consciência", "correct": false }
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Qual destas situações descreve melhor um acto 'condicionado' mas não 'determinado'?",
+      "answers": [
+        { "text": "Uma pedra que cai por gravidade", "correct": false },
+        { "text": "Um robô que executa um programa", "correct": false },
+        { "text": "Uma pessoa pobre que rouba, mas podia pedir ajuda", "correct": true },
+        { "text": "Um reflexo involuntário do joelho", "correct": false }
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Segundo o texto, a liberdade individual só é plenamente realizável se:",
+      "answers": [
+        { "text": "Se seguirem as leis do Estado", "correct": false },
+        { "text": "Se for instruído e culto", "correct": false },
+        { "text": "Se for rico e independente", "correct": false },
+        { "text": "Também os outros puderem ser livres", "correct": true }
+      ]
+    },
+    {
+      "id": 14,
+      "question": "De que palavra latina deriva o termo 'responsabilidade'?",
+      "answers": [
+        { "text": "Respondeo", "correct": false },
+        { "text": "Respondere", "correct": true },
+        { "text": "Respectus", "correct": false },
+        { "text": "Resonare", "correct": false }
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Segundo Fernando Savater, a responsabilidade é:",
+      "answers": [
+        { "text": "Obedecer à lei moral", "correct": false },
+        { "text": "Agir segundo a tradição", "correct": false },
+        { "text": "Conhecer o bem e o mal", "correct": false },
+        { "text": "Saber que cada acto me constrói e define", "correct": true }
+      ]
+    },
+    {
+      "id": 16,
+      "question": "O que afirma o determinismo absoluto sobre a liberdade humana?",
+      "answers": [
+        { "text": "A liberdade é condicionada mas real", "correct": false },
+        { "text": "A liberdade é uma conquista histórica", "correct": false },
+        { "text": "Não existe liberdade nem responsabilidade moral", "correct": true },
+        { "text": "A liberdade é uma experiência espiritual", "correct": false }
+      ]
+    }
+  ]
+}
