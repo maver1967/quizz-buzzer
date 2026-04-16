@@ -141,18 +141,18 @@ input,textarea,select{font-family:inherit;outline:none}
 <!-- HOST SETUP -->
 <div class="screen active" id="host-setup">
   <h1>🎯 Quiz Buzzer</h1>
-  <p class="sub">Carica le domande e crea la stanza</p>
+  <p class="sub">Carrega as perguntas e cria a sala</p>
   <div class="scard"><h3>📋 Domande (JSON)</h3>
     <textarea id="qInput"></textarea>
     <div class="srow">
-      <button class="fbtn">📁 Carica JSON<input type="file" accept=".json" onchange="loadFile(event)"></button>
-      <button class="fbtn" onclick="loadSample()">💡 Esempio</button>
+      <button class="fbtn">📁 Carregar JSON<input type="file" accept=".json" onchange="loadFile(event)"></button>
+      <button class="fbtn" onclick="loadSample()">💡 Exemplo</button>
     </div>
   </div>
-  <div class="scard"><h3>⚙️ Impostazioni</h3>
+  <div class="scard"><h3>⚙️ Definições</h3>
     <div class="srow">
-      <label>Punti per risposta:</label><input type="number" id="cfgPts" value="1" min="1" max="10" style="width:60px">
-      <label>Secondi:</label><input type="number" id="cfgTime" value="30" min="5" max="120" style="width:60px">
+      <label>Pontos por resposta:</label><input type="number" id="cfgPts" value="1" min="1" max="10" style="width:60px">
+      <label>Segundos:</label><input type="number" id="cfgTime" value="30" min="5" max="120" style="width:60px">
     </div>
   </div>
   <button class="btn-go" onclick="startHost()">🚀 Crea Stanza</button>
@@ -160,19 +160,19 @@ input,textarea,select{font-family:inherit;outline:none}
 
 <!-- HOST LOBBY -->
 <div class="screen" id="host-lobby">
-  <div class="topbar"><h1>🎯 Quiz Buzzer</h1><div><span id="lCnt" style="color:var(--dim);margin-right:.5rem">0</span><span class="conn-s c-wait" id="hSt">...</span><button class="hbtn" id="bStart" disabled onclick="startQuiz()">▶ Inizia il Quiz</button></div></div>
+  <div class="topbar"><h1>🎯 Quiz Buzzer</h1><div><span id="lCnt" style="color:var(--dim);margin-right:.5rem">0</span><span class="conn-s c-wait" id="hSt">...</span><button class="hbtn" id="bStart" disabled onclick="startQuiz()">▶ Iniciar o Quiz</button></div></div>
   <div class="lobby-body">
     <div class="qr-wrap" id="qrBox"></div>
     <div class="room-big" id="rDisp"></div>
     <div class="room-link" id="rLink"></div>
-    <p style="color:var(--dim)">Scansiona il QR col cellulare</p>
+    <p style="color:var(--dim)">Digitaliza o QR com o telemóvel</p>
     <div class="chips" id="lChips"></div>
   </div>
 </div>
 
 <!-- HOST GAME -->
 <div class="screen" id="host-game">
-  <div class="topbar"><h1>🎯 Quiz Buzzer</h1><div><span id="qCtr" style="color:var(--dim);margin-right:.5rem"></span><button class="hbtn" onclick="showFinal()">🏆 Classifica</button></div></div>
+  <div class="topbar"><h1>🎯 Quiz Buzzer</h1><div><span id="qCtr" style="color:var(--dim);margin-right:.5rem"></span><button class="hbtn" onclick="showFinal()">🏆 Classificação</button></div></div>
   <div class="game-wrap">
     <div class="game-main" id="gameMain"></div>
     <div class="scorebar" id="scoreBar"></div>
@@ -181,16 +181,16 @@ input,textarea,select{font-family:inherit;outline:none}
 
 <!-- HOST FINAL -->
 <div class="screen" id="host-final">
-  <h1>🏆 Classifica Finale</h1>
+  <h1>🏆 Classificação Final</h1>
   <div class="flist" id="fL"></div>
-  <button class="btn-go" style="margin-top:1rem" onclick="show('host-game');showIntro()">← Continua</button>
+  <button class="btn-go" style="margin-top:1rem" onclick="show('host-game');showIntro()">← Continuar</button>
 </div>
 
 <!-- PLAYER JOIN -->
 <div class="screen pscreen" id="player-join">
   <h2>🎯 Quiz Buzzer</h2>
-  <p style="color:var(--dim)">Nome della squadra</p>
-  <input id="pN" placeholder="Nome squadra" maxlength="20" autocomplete="off">
+  <p style="color:var(--dim)">Nome da equipa</p>
+  <input id="pN" placeholder="Nome da equipa" maxlength="20" autocomplete="off">
   <div class="cpick" id="cP"></div>
   <button class="btn-go" onclick="joinGame()">Entra!</button>
   <p id="pE" style="color:var(--red);font-size:.85rem;min-height:1.2rem"></p>
@@ -201,15 +201,15 @@ input,textarea,select{font-family:inherit;outline:none}
   <div style="font-size:1.3rem;font-weight:700" id="pwN"></div>
   <span class="conn-s c-wait" id="pSt">...</span>
   <div class="loader"></div>
-  <div style="color:var(--dim)" id="pwMsg">Connessione...</div>
+  <div style="color:var(--dim)" id="pwMsg">A conectar...</div>
 </div>
 
 <!-- PLAYER ANSWER -->
 <div class="screen pscreen" id="player-answer">
   <div class="p-timer" id="pTm">30</div>
-  <p style="color:var(--dim);font-size:.9rem">Guarda il proiettore e scegli!</p>
+  <p style="color:var(--dim);font-size:.9rem">Olha para o ecrã e escolhe!</p>
   <div class="p-abcd" id="pAB"></div>
-  <p style="color:var(--dim);font-size:.75rem;margin-top:.5rem">Puoi cambiare risposta fino allo scadere</p>
+  <p style="color:var(--dim);font-size:.75rem;margin-top:.5rem">Podes mudar a resposta até o tempo acabar</p>
 </div>
 
 <!-- PLAYER RESULT -->
@@ -286,7 +286,7 @@ document.getElementById('qInput').value=JSON.stringify(DOMANDE_DEFAULT,null,2);
 
 // ============ HOST ============
 function startHost(){
-  try{questions=normalizeQuestions(document.getElementById('qInput').value);if(!questions.length)throw'vuoto';questions.forEach((q,i)=>{if(!q.q||!q.options||q.correct===undefined||q.correct<0)throw`Domanda ${i+1} incompleta`})}catch(e){alert('Errore: '+e);return}
+  try{questions=normalizeQuestions(document.getElementById('qInput').value);if(!questions.length)throw'vazio';questions.forEach((q,i)=>{if(!q.q||!q.options||q.correct===undefined||q.correct<0)throw`Pergunta ${i+1} incompleta`})}catch(e){alert('Erro: '+e);return}
   cfgP=+document.getElementById('cfgPts').value||1;
   cfgT=+document.getElementById('cfgTime').value||30;
   roomId=String(Math.floor(1000+Math.random()*9000));
@@ -326,12 +326,34 @@ function hMsg(cn,d){
   }
 }
 
-function uLob(){const n=Object.keys(teams).length;document.getElementById('lCnt').textContent=n+' squadr'+(n===1?'a':'e');document.getElementById('bStart').disabled=n===0;document.getElementById('lChips').innerHTML=Object.values(teams).map(t=>`<div class="chip" style="color:${t.color}">${esc(t.name)}</div>`).join('')}
+function uLob(){const n=Object.keys(teams).length;document.getElementById('lCnt').textContent=n+' equipa'+(n===1?'':'s');document.getElementById('bStart').disabled=n===0;document.getElementById('lChips').innerHTML=Object.values(teams).map(t=>`<div class="chip" style="color:${t.color}">${esc(t.name)}</div>`).join('')}
 
-function startQuiz(){show('host-game');curQ=-1;uScore();nextQ()}
+function startQuiz(){show('host-game');curQ=-1;isTest=true;uScore();nextQ()}
+
+// ====== TEST QUESTION ======
+const TEST_Q={q:"🧪 Qual é a equipa de futebol preferida do Padre Roberto?",options:["Real Madrid","Barcelona","Milan","PSG"],correct:2};
+let isTest=true;
 
 // ====== GAME FLOW ======
 function nextQ(){
+  if(isTest && curQ===-1){
+    // Show test question
+    curQ=0;
+    answers={};
+    document.getElementById('qCtr').textContent='TESTE';
+    showTestIntro();
+    return;
+  }
+  if(isTest && curQ===0){
+    // Test done — show ceremony
+    isTest=false;
+    curQ=-1;
+    // Reset scores from test
+    for(let tid in teams)teams[tid].score=0;
+    uScore();
+    showCeremony();
+    return;
+  }
   curQ++;
   if(curQ>=questions.length){showFinal();return}
   answers={};
@@ -339,12 +361,119 @@ function nextQ(){
   showIntro();
 }
 
+function showTestIntro(){
+  const gm=document.getElementById('gameMain');
+  gm.innerHTML=`
+    <div class="q-intro" style="font-size:2.5rem">🧪 Pergunta de Teste</div>
+    <p style="color:var(--dim);font-size:1.2rem;text-align:center;max-width:600px">
+      Vamos testar se tudo funciona!<br>
+      Olhem para o ecrã e escolham a resposta no telemóvel.<br>
+      Podem mudar a resposta até o tempo acabar.
+    </p>
+  `;
+  bc({type:'intro',n:'TESTE'});
+  beep(440,.1);
+  setTimeout(()=>showTestQuestion(),4000);
+}
+
+function showTestQuestion(){
+  const q=TEST_Q;
+  const gm=document.getElementById('gameMain');
+  gm.innerHTML=`
+    <div class="qbox">
+      <div class="qnum" style="color:var(--gold)">🧪 PERGUNTA DE TESTE</div>
+      <div class="qtxt">${esc(q.q)}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:1.5rem">
+      <div class="timer-ring">
+        <svg width="100" height="100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" id="tRing" cx="50" cy="50" r="44" stroke-dasharray="${CIRCUMFERENCE}" stroke-dashoffset="0"/></svg>
+        <div class="timer-num" id="tNum">20</div>
+      </div>
+      <div style="color:var(--dim);font-size:.9rem" id="ansCount">0/${Object.keys(teams).length} respostas</div>
+    </div>
+    <div class="opts" id="hO">${q.options.map((o,i)=>`<div class="ocard ${OCSS[i]}" id="ho${i}"><span class="ol">${LL[i]}</span><span>${esc(o)}</span><div class="team-dots" id="dots${i}"></div></div>`).join('')}</div>
+  `;
+  timeLeft=20;
+  bc({type:'question',n:q.options.length,t:20});
+  beep(660,.15);
+  timerInt=setInterval(()=>{
+    timeLeft--;
+    const el=document.getElementById('tNum');const ring=document.getElementById('tRing');
+    if(!el)return;
+    el.textContent=timeLeft;
+    ring.style.strokeDashoffset=CIRCUMFERENCE*(1-timeLeft/20);
+    if(timeLeft<=5){el.classList.add('urgent');ring.classList.add('urgent');beep(300,.05)}
+    bc({type:'tick',t:timeLeft});
+    if(timeLeft<=0){clearInterval(timerInt);revealTestAnswers()}
+  },1000);
+}
+
+function revealTestAnswers(){
+  bc({type:'lock'});
+  const q=TEST_Q;
+  for(let tid in answers){
+    const idx=answers[tid];
+    const dotsEl=document.getElementById('dots'+idx);
+    if(dotsEl){const t=teams[tid];dotsEl.innerHTML+=`<div class="tdot" style="background:${t.color}" title="${esc(t.name)}">${esc(t.name.charAt(0))}</div>`}
+  }
+  setTimeout(()=>{
+    q.options.forEach((_,i)=>{
+      const el=document.getElementById('ho'+i);
+      if(i===q.correct)el.classList.add('o-correct');else el.classList.add('o-wrong');
+    });
+    beep(880,.1);setTimeout(()=>beep(1100,.12),120);
+    let winners=[];
+    for(let tid in teams){if(answers[tid]===q.correct)winners.push(tid)}
+    if(winners.length>0)startFireworks(2000);
+    bc({type:'result',ci:q.correct,winners:winners.map(t=>teams[t]?.name)});
+    setTimeout(()=>nextQ(),5000);
+  },3000);
+}
+
+function showCeremony(){
+  const gm=document.getElementById('gameMain');
+  gm.innerHTML=`
+    <div style="text-align:center;animation:fadeUp .8s ease-out">
+      <div style="font-size:1.2rem;color:var(--dim);margin-bottom:1rem;letter-spacing:3px;text-transform:uppercase">Teste concluído com sucesso!</div>
+      <div style="font-size:4rem;margin-bottom:.5rem">⚔️</div>
+      <div style="font-size:3.5rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem">
+        A COMPETIÇÃO COMEÇA!
+      </div>
+      <div style="font-size:1.3rem;color:var(--dim);margin-bottom:1.5rem">${questions.length} perguntas · ${cfgT} segundos cada</div>
+      <div style="font-size:1.5rem;color:var(--gold);animation:pulse 1s infinite alternate">Preparem-se...</div>
+    </div>
+  `;
+  bc({type:'ceremony'});
+  beep(440,.15);setTimeout(()=>beep(550,.15),200);setTimeout(()=>beep(660,.15),400);setTimeout(()=>beep(880,.25),600);
+  // Dramatic pause then start
+  setTimeout(()=>{
+    gm.innerHTML=`
+      <div style="text-align:center;animation:fadeUp .3s">
+        <div style="font-size:6rem;font-weight:900;color:var(--gold);text-shadow:0 0 40px rgba(255,215,0,.5)">3</div>
+      </div>`;
+    beep(440,.15);
+  },5000);
+  setTimeout(()=>{
+    gm.innerHTML=`<div style="text-align:center;animation:fadeUp .3s"><div style="font-size:6rem;font-weight:900;color:var(--accent);text-shadow:0 0 40px rgba(167,139,250,.5)">2</div></div>`;
+    beep(440,.15);
+  },6000);
+  setTimeout(()=>{
+    gm.innerHTML=`<div style="text-align:center;animation:fadeUp .3s"><div style="font-size:6rem;font-weight:900;color:var(--red);text-shadow:0 0 40px rgba(255,71,87,.5)">1</div></div>`;
+    beep(440,.15);
+  },7000);
+  setTimeout(()=>{
+    gm.innerHTML=`<div style="text-align:center;animation:fadeUp .3s"><div style="font-size:5rem;font-weight:900;color:var(--green);text-shadow:0 0 50px rgba(46,232,154,.5)">VAI! 🚀</div></div>`;
+    beep(880,.3);
+    startFireworks(1500);
+  },8000);
+  setTimeout(()=>nextQ(),9500);
+}
+
 function showIntro(){
   const gm=document.getElementById('gameMain');
-  gm.innerHTML=`<div class="q-intro">Pergunta n.º ${curQ+1}</div><p style="color:var(--dim);font-size:1.1rem">${questions.length - curQ} domande rimanenti</p>`;
+  gm.innerHTML=`<div class="q-intro">Pergunta n.º ${curQ+1}</div><p style="color:var(--dim);font-size:1.1rem">${questions.length - curQ} perguntas restantes</p>`;
   bc({type:'intro',n:curQ+1});
   beep(440,.1);
-  // Auto-advance after 3 seconds
   setTimeout(()=>showQuestion(),3000);
 }
 
@@ -353,7 +482,7 @@ function showQuestion(){
   const gm=document.getElementById('gameMain');
   gm.innerHTML=`
     <div class="qbox">
-      <div class="qnum">Domanda ${curQ+1} di ${questions.length}</div>
+      <div class="qnum">Pergunta ${curQ+1} de ${questions.length}</div>
       <div class="qtxt">${esc(q.q)}</div>
     </div>
     <div style="display:flex;align-items:center;gap:1.5rem">
@@ -361,7 +490,7 @@ function showQuestion(){
         <svg width="100" height="100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" id="tRing" cx="50" cy="50" r="44" stroke-dasharray="${CIRCUMFERENCE}" stroke-dashoffset="0"/></svg>
         <div class="timer-num" id="tNum">${cfgT}</div>
       </div>
-      <div style="color:var(--dim);font-size:.9rem" id="ansCount">0/${Object.keys(teams).length} risposte</div>
+      <div style="color:var(--dim);font-size:.9rem" id="ansCount">0/${Object.keys(teams).length} respostas</div>
     </div>
     <div class="opts" id="hO">${q.options.map((o,i)=>`<div class="ocard ${OCSS[i]}" id="ho${i}"><span class="ol">${LL[i]}</span><span>${esc(o)}</span><div class="team-dots" id="dots${i}"></div></div>`).join('')}</div>
   `;
@@ -385,7 +514,7 @@ function showQuestion(){
 
 function uAnswerCount(){
   const el=document.getElementById('ansCount');
-  if(el)el.textContent=Object.keys(answers).length+'/'+Object.keys(teams).length+' risposte';
+  if(el)el.textContent=Object.keys(answers).length+'/'+Object.keys(teams).length+' respostas';
 }
 
 function revealAnswers(){
@@ -508,29 +637,30 @@ document.addEventListener('keydown',e=>{
 function initCP(){const c=document.getElementById('cP');TC.forEach((col,i)=>{const b=document.createElement('button');b.style.background=col;b.onclick=()=>{myC=col;c.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};if(i===0){myC=col;b.classList.add('sel')}c.appendChild(b)})}
 
 function joinGame(){
-  const n=document.getElementById('pN').value.trim();if(!n){document.getElementById('pE').textContent='Inserisci un nome!';return}myN=n;
+  const n=document.getElementById('pN').value.trim();if(!n){document.getElementById('pE').textContent='Insere um nome!';return}myN=n;
   show('player-wait');document.getElementById('pwN').textContent='🏷 '+myN;
   const st=document.getElementById('pSt');const msg=document.getElementById('pwMsg');
-  st.textContent='...';st.className='conn-s c-wait';msg.textContent='Connessione al server...';
+  st.textContent='...';st.className='conn-s c-wait';msg.textContent='A conectar ao servidor...';
   lg('Joining qb-'+roomId);
 
   peer=new Peer(undefined,PCFG);
   peer.on('open',myId=>{
-    lg('Player open: '+myId);msg.textContent='Connessione alla stanza...';
+    lg('Player open: '+myId);msg.textContent='A conectar à sala...';
     hC=peer.connect('qb-'+roomId,{reliable:true,serialization:'json'});
-    hC.on('open',()=>{lg('Connected!');st.textContent='🟢';st.className='conn-s c-ok';msg.textContent='Connesso! In attesa...';hC.send({type:'join',name:myN,color:myC})});
+    hC.on('open',()=>{lg('Connected!');st.textContent='🟢';st.className='conn-s c-ok';msg.textContent='Conectado! A aguardar...';hC.send({type:'join',name:myN,color:myC})});
     hC.on('data',d=>{lg('Host: '+JSON.stringify(d));pMsg(d)});
-    hC.on('close',()=>{show('player-join');document.getElementById('pE').textContent='Connessione persa'});
+    hC.on('close',()=>{show('player-join');document.getElementById('pE').textContent='Conexão perdida'});
     hC.on('error',er=>lg('Conn err: '+er));
-    setTimeout(()=>{if(!hC||!hC.open){msg.textContent='Stanza non trovata. Il docente ha creato la stanza?';st.textContent='❌';st.className='conn-s c-err'}},10000);
+    setTimeout(()=>{if(!hC||!hC.open){msg.textContent='Sala não encontrada. O professor já criou a sala?';st.textContent='❌';st.className='conn-s c-err'}},10000);
   });
-  peer.on('error',er=>{lg('Peer err: '+er.type);document.getElementById('pE').textContent='Errore: '+er.type;if(er.type==='peer-unavailable'){document.getElementById('pwMsg').textContent='Stanza non trovata!'}});
+  peer.on('error',er=>{lg('Peer err: '+er.type);document.getElementById('pE').textContent='Erro: '+er.type;if(er.type==='peer-unavailable'){document.getElementById('pwMsg').textContent='Sala não encontrada!'}});
   peer.on('disconnected',()=>peer.reconnect());
 }
 
 function pMsg(d){
-  if(d.type==='joined'){show('player-wait');document.getElementById('pwMsg').textContent='Connesso! In attesa del quiz...'}
-  else if(d.type==='intro'){show('player-wait');document.getElementById('pwMsg').textContent=`Pergunta n.º ${d.n} — guarda il proiettore!`}
+  if(d.type==='joined'){show('player-wait');document.getElementById('pwMsg').textContent='Conectado! A aguardar o quiz...'}
+  else if(d.type==='intro'){show('player-wait');document.getElementById('pwMsg').textContent=`Pergunta n.º ${d.n} — olha para o ecrã!`}
+  else if(d.type==='ceremony'){show('player-wait');document.getElementById('pwMsg').textContent='⚔️ A competição vai começar! Preparem-se...'}
   else if(d.type==='question'){show('player-answer');myChoice=-1;mkABCD(d.n);startPTimer(d.t)}
   else if(d.type==='tick'){const el=document.getElementById('pTm');if(el){el.textContent=d.t;if(d.t<=5){el.classList.add('urgent')}else{el.classList.remove('urgent')}}}
   else if(d.type==='lock'){
@@ -544,16 +674,16 @@ function pMsg(d){
     show('player-result');clearInterval(pTimerInt);
     const won=d.winners&&d.winners.includes(myN);
     document.getElementById('prI').textContent=won?'🎉':'😞';
-    document.getElementById('prT').textContent=won?'Corretto! 🎯':'Sbagliato...';
+    document.getElementById('prT').textContent=won?'Correto! 🎯':'Errado...';
     document.getElementById('prT').style.color=won?'var(--green)':'var(--red)';
-    document.getElementById('prD').textContent='Risposta corretta: '+LL[d.ci];
+    document.getElementById('prD').textContent='Resposta correta: '+LL[d.ci];
     if(won&&navigator.vibrate)navigator.vibrate([80,40,80,40,80]);
   }
   else if(d.type==='final'){
     show('player-result');
     document.getElementById('prI').textContent='🏆';
     const me=d.l.findIndex(t=>t.n===myN);
-    document.getElementById('prT').textContent=me===0?'Avete vinto!':'Posizione: '+(me+1)+'°';
+    document.getElementById('prT').textContent=me===0?'Vocês ganharam!':'Posição: '+(me+1)+'°';
     document.getElementById('prT').style.color=me===0?'var(--gold)':'var(--text)';
     document.getElementById('prD').textContent=d.l.map((t,i)=>(i+1)+'. '+t.n+': '+t.s).join(' · ');
   }
